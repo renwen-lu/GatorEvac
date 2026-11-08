@@ -1,0 +1,17 @@
+# build output
+build*/
+cmake-build-*/
+out/
+.vs/
+.vscode/
+.idea/
+CMakeUserPresets.json
+
+# Python
+__pycache__/
+.venv/
+
+# large data (recreate with: python scripts/fetch_data.py)
+data/*
+!data/shelters_fl.csv
+/benchmark.csv
