@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GatorEvac</title>
+  <link rel="stylesheet" href="vendor/maplibre-gl.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <aside id="panel">
+    <header>
+      <h1>GatorEvac</h1>
+      <p>Florida shelter routes<br>COP3530 - Dijkstra and A*</p>
+    </header>
+
+    <nav class="tabs">
+      <button data-tab="route" class="active">Route</button>
+      <button data-tab="race">Race</button>
+    </nav>
+
+    <div class="scroll">
+      <p class="error" id="error" hidden></p>
+      <section class="section" id="goal-card">
+        <h2>Destination</h2>
+        <div class="segmented" id="goal">
+          <button data-goal="nearest" class="active">Nearest open shelter</button>
+          <button data-goal="pick">Pick on map</button>
+        </div>
+        <p class="hint" id="hint"></p>
+      </section>
+
+      <section class="tab-body" data-for="route">
+        <div class="section">
+          <h2>Results</h2>
+          <p class="hint" id="result-empty">Select a starting point on the map.</p>
+          <div id="result" hidden>
+            <div class="result-head">
+              <div>
+                <div class="result-label" id="r-kind"></div>
+                <div class="r-name" id="r-name"></div>
+                <div class="r-sub" id="r-sub"></div>
+              </div>
+              <div class="r-dist"><span id="r-km"></span><small>km along the route</small></div>
+            </div>
+            <table class="compare">
+              <thead><tr><th>Algorithm</th><th>Nodes settled</th><th class="num">Time</th></tr></thead>
+              <tbody id="r-rows"></tbody>
+            </table>
+            <p class="hint" id="r-note"></p>
+          </div>
+        </div>
+        <div class="section">
+          <h2>Show visited nodes</h2>
+          <div class="segmented" id="explored">
+            <button data-show="none" class="active">Off</button>
+            <button data-show="0">Dijkstra</button>
+            <button data-show="1">A*</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="tab-body" data-for="race" hidden>
+        <div class="section">
+          <h2>Compare searches</h2>
+          <p class="hint">Both searches replay at the same number of nodes per second.</p>
+          <div class="row">
+            <button class="btn primary" id="race-play">Play</button>
+            <button class="btn" id="race-restart">Restart</button>
+            <button class="btn" id="race-finish">Finish</button>
+          </div>
+          <label class="slider">
+            <span>Speed</span>
+            <input type="range" id="race-speed" min="3" max="6.5" step="0.05" value="5.2">
+            <output id="race-speed-out">158k/s</output>
+          </label>
+          <p class="hint" id="race-stats"></p>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Floods and shelters</h2>
+        <div class="row">
+          <button class="btn" id="flood-draw">Add flood zone</button>
+          <button class="btn" id="reset">Reset</button>
+        </div>
+        <label class="slider">
+          <span>Radius</span>
+          <input type="range" id="flood-km" min="0.5" max="20" step="0.5" value="3">
+          <output id="flood-km-out">3 km</output>
+        </label>
+        <p class="hint" id="scenario-stats"></p>
+      </section>
+    </div>
+
+    <footer class="status" id="status">Loading...</footer>
+  </aside>
+
+  <main id="maps">
+    <div class="pane"><div class="map" id="map-0"></div><div class="badge" id="badge-0" hidden></div></div>
+    <div class="pane" id="pane-1" hidden><div class="map" id="map-1"></div><div class="badge" id="badge-1" hidden></div></div>
+    <div class="map-legend">
+      <span><span class="dot" style="background:var(--open)"></span>Open shelter</span>
+      <span><span class="dot" style="background:var(--closed)"></span>Closed</span>
+      <span><span class="dot" style="background:var(--flood)"></span>Flood zone</span>
+      <span><span class="dot" style="background:#16191d"></span>Start</span>
+    </div>
+  </main>
+</div>
+
+<div class="loading" id="loading">
+  <p id="loading-message">Loading Florida road data...</p>
+  <button class="btn" id="loading-retry" hidden>Reload page</button>
+</div>
+
+<script src="vendor/maplibre-gl.js"></script>
+<script src="vendor/deck.gl.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
